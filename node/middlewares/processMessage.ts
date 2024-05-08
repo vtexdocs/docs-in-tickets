@@ -8,6 +8,7 @@ export async function processMessage (ctx: Context, next: () => Promise<any>) {
 
   //const request = ctx.request
   const body = await bodyParser(ctx.req)
+  console.log(body)
 
   ctx.status = 200
 
