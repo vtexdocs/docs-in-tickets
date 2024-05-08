@@ -1,7 +1,14 @@
-// The saveMessage function gets the processed data and saves it to our database.
-
-//export async function saveMessage (ctx: Context, next: () => Promise<any>) {
-//  console.info('Running saveMessage')
+// The saveMessage function gets the message data and saves it to our database.
+// import { HttpClient } from "@vtex/api"
 //
-//  await next()
-//}
+// const url = 'https://analytics.vtex.com/api/analytics/schemaless-events'
+// const headers = {
+//   'Content-Type': 'application/json'
+// }
+//
+// export async function saveMessage (this: any, messageData: any) {
+//
+//   private http: HttpClient
+//
+//   return http.post()
+// }
