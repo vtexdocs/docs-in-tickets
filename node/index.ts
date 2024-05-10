@@ -39,7 +39,7 @@ declare global {
 
   // The shape of our State object found in `ctx.state`. This is used as state bag to communicate between middlewares.
   interface State extends RecorderState {
-    message: object
+    message: Record<string, unknown>
   }
 }
 
@@ -49,7 +49,7 @@ export default new Service({
   routes: {
     // `status` is the route ID from service.json. It maps to an array of middlewares (or a single handler).
     messages: method({
-      POST: [processMessage]
+      POST: [processMessage],
     }),
   },
 })
