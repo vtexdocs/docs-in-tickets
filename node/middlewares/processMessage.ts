@@ -6,12 +6,13 @@ export async function processMessage(
   ctx: Context,
   next: () => Promise<Record<string, unknown>>
 ) {
-  console.info('Running processMessage')
+  console.log('Running processMessage')
 
   // const requestReceived = ctx.request
   const messageReceived = await bodyParser(ctx.req)
 
   console.info(messageReceived)
+  console.info(typeof messageReceived)
 
   const redshift = ctx.clients.redshift
 
@@ -21,6 +22,9 @@ export async function processMessage(
   console.info(saveResponse)
 
   ctx.status = 200
+  ctx.response.body = {
+    mensagem: 'deu certo',
+  }
 
   await next()
 }
