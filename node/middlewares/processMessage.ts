@@ -2,8 +2,6 @@
 
 import bodyParser from 'co-body'
 
-import { saveMessage } from '../clients/saveMessage'
-
 export async function processMessage(
   ctx: Context,
   next: () => Promise<Record<string, unknown>>
@@ -15,10 +13,12 @@ export async function processMessage(
 
   console.info(messageReceived)
 
-  const response = await saveMessage(messageReceived)
+  const redshift = ctx.clients.redshift
 
-  console.info('response')
-  console.info(response)
+  const saveResponse = await redshift.saveMessage(messageReceived)
+
+  console.info('saveResponse')
+  console.info(saveResponse)
 
   ctx.status = 200
 
