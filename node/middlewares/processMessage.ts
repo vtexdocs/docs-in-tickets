@@ -2,7 +2,7 @@
 
 import bodyParser from 'co-body'
 
-import { saveMessage } from './saveMessage'
+import { saveMessage } from '../clients/saveMessage'
 
 export async function processMessage(
   ctx: Context,
