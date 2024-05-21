@@ -15,6 +15,10 @@ export async function processTicket(
   console.info('Ticket ID: ')
   console.info(ticketId)
 
+  const zendesk = ctx.clients.zendesk
+
+  const ticketComments = await zendesk.getComments(ticketId)
+
   ctx.status = 200
   ctx.response.body = {
     mensagem: 'ticket id recebido',
