@@ -11,7 +11,7 @@
       "public": true
     },
     "tickets": {
-      "path": "/messages",
+      "path": "/tickets",
       "public": true
     }
   }
