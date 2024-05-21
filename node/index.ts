@@ -3,6 +3,7 @@ import { LRUCache, method, Service } from '@vtex/api'
 
 import { Clients } from './clients'
 import { processMessage } from './middlewares/processMessage'
+import { processTicket } from './middlewares/processTicket'
 
 const TIMEOUT_MS = 800
 
