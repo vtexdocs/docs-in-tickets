@@ -9,21 +9,14 @@ export async function processTicket(
   console.info('Running processTicket')
 
   // const requestReceived = ctx.request
-  const messageReceived = await bodyParser(ctx.req)
+  const ticketId = await bodyParser(ctx.req)
 
-  console.info(messageReceived)
-  console.info(typeof messageReceived)
-
-  // const redshift = ctx.clients.redshift
-
-  // const saveResponse = await redshift.saveMessage(messageReceived)
-
-  console.info('saveResponse')
-  // console.info(saveResponse)
+  console.info(ticketId)
+  console.info(typeof ticketId)
 
   ctx.status = 200
   ctx.response.body = {
-    mensagem: 'deu certo',
+    mensagem: 'ticket id recebido',
   }
 
   await next()
