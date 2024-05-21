@@ -12,7 +12,7 @@ export async function processTicket(
   const requestBody = await bodyParser(ctx.req)
   const ticketId = requestBody.ticketId
 
-  console.info('Ticket ID:')
+  console.info('Ticket ID: ')
   console.info(ticketId)
 
   ctx.status = 200
