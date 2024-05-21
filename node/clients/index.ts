@@ -7,7 +7,8 @@ import ZendeskClient from './zendesk'
 export class Clients extends IOClients {
   public get redshift() {
     return this.getOrSet('redshift', RedshiftClient)
-  },
+  }
+
   public get zendesk() {
     return this.getOrSet('zendesk', ZendeskClient)
   }
