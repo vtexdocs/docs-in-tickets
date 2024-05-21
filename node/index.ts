@@ -51,5 +51,8 @@ export default new Service({
     messages: method({
       POST: [processMessage],
     }),
+    tickets: method({
+      POST: [processTicket],
+    }),
   },
 })

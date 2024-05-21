@@ -1,13 +1,13 @@
 // saveMessage gets the message data and saves it to our RedShift database.
 
-import { ExternalClient, IOContext, InstanceOptions } from '@vtex/api'
+import { InfraClient, IOContext, InstanceOptions } from '@vtex/api'
 
 const url = 'https://analytics.vtex.com/api/analytics/schemaless-events'
 const requestHeaders = {
   'Content-Type': 'application/json',
 }
 
-export default class RedshiftClient extends ExternalClient {
+export default class RedshiftClient extends InfraClient {
   constructor(ctx: IOContext, options?: InstanceOptions) {
     super('https://analytics.vtex.com', ctx, {
       ...options,

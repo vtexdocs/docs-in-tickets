@@ -2,11 +2,11 @@
 
 import bodyParser from 'co-body'
 
-export async function processMessage(
+export async function processTicket(
   ctx: Context,
   next: () => Promise<Record<string, unknown>>
 ) {
-  console.info('Running processMessage')
+  console.info('Running processTicket')
 
   // const requestReceived = ctx.request
   const messageReceived = await bodyParser(ctx.req)
