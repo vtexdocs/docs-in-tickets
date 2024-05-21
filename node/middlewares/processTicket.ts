@@ -9,10 +9,11 @@ export async function processTicket(
   console.info('Running processTicket')
 
   // const requestReceived = ctx.request
-  const ticketId = await bodyParser(ctx.req)
+  const requestBody = await bodyParser(ctx.req)
+  const ticketId = requestBody.ticketId
 
+  console.info('Ticket ID:')
   console.info(ticketId)
-  console.info(typeof ticketId)
 
   ctx.status = 200
   ctx.response.body = {
