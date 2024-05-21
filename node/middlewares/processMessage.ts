@@ -2,16 +2,29 @@
 
 import bodyParser from 'co-body'
 
-export async function processMessage (ctx: Context, next: () => Promise<any>) {
-
+export async function processMessage(
+  ctx: Context,
+  next: () => Promise<Record<string, unknown>>
+) {
   console.info('Running processMessage')
 
-  //const request = ctx.request
-  const body = await bodyParser(ctx.req)
-  console.log(body)
+  // const requestReceived = ctx.request
+  const messageReceived = await bodyParser(ctx.req)
+
+  console.info(messageReceived)
+  console.info(typeof messageReceived)
+
+  // const redshift = ctx.clients.redshift
+
+  // const saveResponse = await redshift.saveMessage(messageReceived)
+
+  console.info('saveResponse')
+  // console.info(saveResponse)
 
   ctx.status = 200
+  ctx.response.body = {
+    mensagem: 'deu certo',
+  }
 
   await next()
-
 }

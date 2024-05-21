@@ -9,6 +9,10 @@
     "messages": {
       "path": "/messages",
       "public": true
+    },
+    "tickets": {
+      "path": "/tickets",
+      "public": true
     }
   }
 }

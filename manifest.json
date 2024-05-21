@@ -13,6 +13,14 @@
     "prereleasy": "bash lint.sh"
   },
   "credentialType": "absolute",
-  "policies": [],
+  "policies": [
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "analytics.vtex.com",
+        "path": "*"
+      }
+    }
+  ],
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
 }
