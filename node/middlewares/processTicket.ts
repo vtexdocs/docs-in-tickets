@@ -19,12 +19,14 @@ export async function processTicket(
 
   const ticketComments = await zendesk.getComments(ticketId)
 
-  console.info(typeof ticketComments)
-  console.info(ticketComments)
+  for (comment of ticketComments.comments) {
+    const id = comment.id
+    const urls = comment.html_body.split('href"').split('"')[0]
+  }
 
   ctx.status = 200
   ctx.response.body = {
-    mensagem: 'ticket id recebido',
+    mensagem: 'ticket processado',
   }
 
   await next()
