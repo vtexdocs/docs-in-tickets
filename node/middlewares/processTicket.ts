@@ -1,6 +1,7 @@
 // The processMessage function gets the ticket message from the context and formats its content to be saved in a database later.
 
 import bodyParser from 'co-body'
+import { or } from 'ramda'
 
 export async function processTicket(
   ctx: Context,
@@ -19,28 +20,35 @@ export async function processTicket(
 
   const ticketComments = await zendesk.getComments(ticketId)
 
+  // Iterate over comments
   for (const comment of ticketComments.comments) {
-    let urls = []
-    let parsingArray = comment.html_body.split('href="')
-    let parsingString = parsingArray[1]
-    const id = comment.id
+    // Get an array of all urls in the comment
+    const allUrls = comment.html_body
+      .split('href="')
+      .slice(1)
+      .map((x: string) => x.split('">')[0])
 
-    if (typeof parsingString === 'undefined') {
-      console.info('undefined')
-      continue
+    let docUrls = []
+
+    // Substrings to look for and to exclude
+    const helpUrl = 'https://help.vtex.com/'
+    const devUrl = 'https://developers.vtex.com/'
+    // URLs to exclude
+    const helpUrlNoSlash = 'https://help.vtex.com'
+    const devUrlNoSlash = 'https://developers.vtex.com'
+
+    // Select only public docs articles
+    for (const url of allUrls) {
+      console.info(url)
+      if (or(url.includes(helpUrl), url.includes(devUrl))) {
+        console.info('yep')
+        docUrls.push(url)
+      } else {
+        console.info('nope')
+      }
     }
 
-    console.info('Parsing comment: ' + id)
-    while (parsingArray.length > 1) {
-      console.info('loop')
-      console.info('length ' + parsingArray.length)
-      const parsedUrl = parsingArray[1].split('">')[0]
-
-      urls.push(parsedUrl)
-      parsingArray = parsingArray[2].split('href="')
-      console.info('urls array')
-      console.info(urls)
-    }
+    console.info(docUrls)
   }
 
   ctx.status = 200
