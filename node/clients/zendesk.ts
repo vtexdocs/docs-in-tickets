@@ -22,8 +22,11 @@ export default class ZendeskClient extends ExternalClient {
   public async getComments(ticketId: string) {
     const url = `https://vtexhelp1704480599.zendesk.com/api/v2/tickets/${ticketId}/comments.json`
 
-    return this.http.get(url, {
+    return this.http.get(
+      url,
+      {
       headers: requestHeaders,
-    })
+      }
+    )
   }
 }
