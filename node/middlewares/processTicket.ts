@@ -3,19 +3,7 @@
 import bodyParser from 'co-body'
 import { or } from 'ramda'
 
-// Defining MessageData type, to send data to Redshift
-interface MessageData {
-  ticketId: string
-  commentId: number
-  authorId: number
-  createdAt: string
-  containsHelpArticle: boolean
-  containsDevArticle: boolean
-  numberOfDocsPortalsUrls: number
-  docsPortalsUrls: string[]
-  numberOfArticleUrls: number
-  articleUrls: string[]
-}
+import type { MessageData } from '../clients/redshift'
 
 // Defining URLs that will be used to parse and process the comment data
 // Substrings to look for and to exclude
@@ -35,7 +23,6 @@ export async function processTicket(
 ) {
   console.info('Running processTicket')
 
-  // const requestReceived = ctx.request
   const requestBody = await bodyParser(ctx.req)
   const zendeskTicket = requestBody.ticketId
 
@@ -43,8 +30,11 @@ export async function processTicket(
   console.info(zendeskTicket)
 
   const zendesk = ctx.clients.zendesk
+  const redshift = ctx.clients.redshift
 
   const ticketComments = await zendesk.getComments(zendeskTicket)
+
+  let allCommentsWithUrls = []
 
   // Iterate over comments
   for (const comment of ticketComments.comments) {
@@ -98,13 +88,16 @@ export async function processTicket(
         articleUrls: docUrls,
       }
 
-      console.info(messageData)
+      allCommentsWithUrls.push(messageData)
+
+      redshift.saveMessage(messageData)
     }
   }
 
   ctx.status = 200
   ctx.response.body = {
-    mensagem: 'ticket processado',
+    message: 'ticket processed',
+    docsUrlsData: allCommentsWithUrls,
   }
 
   await next()
