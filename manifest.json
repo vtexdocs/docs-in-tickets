@@ -17,7 +17,7 @@
     {
       "name": "outbound-access",
       "attrs": {
-        "host": "analytics.vtex.com",
+        "host": "rc.vtex.com",
         "path": "*"
       }
     },
