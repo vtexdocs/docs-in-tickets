@@ -8,6 +8,7 @@
     "prefer-const":"off",
     "prefer-destructuring":"off",
     "@typescript-eslint/restrict-plus-operands":"off",
-    "prefer-template":"off"
+    "prefer-template":"off",
+    "no-await-in-loop": "off"
   }
 }
