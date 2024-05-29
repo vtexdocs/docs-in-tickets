@@ -35,6 +35,7 @@ export async function processTicket(
   const ticketComments = await zendesk.getComments(zendeskTicket)
 
   let allCommentsWithUrls = []
+  let redshiftResponse: string | void = ''
 
   // Iterate over comments
   for (const comment of ticketComments.comments) {
@@ -90,13 +91,14 @@ export async function processTicket(
 
       allCommentsWithUrls.push(messageData)
 
-      redshift.saveMessage(messageData)
+      redshiftResponse = await redshift.saveMessage(messageData)
     }
   }
 
   ctx.status = 200
   ctx.response.body = {
     message: 'ticket processed',
+    redShift: redshiftResponse,
     docsUrlsData: allCommentsWithUrls,
   }
 
