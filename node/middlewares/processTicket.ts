@@ -102,5 +102,7 @@ export async function processTicket(
     docsUrlsData: allCommentsWithUrls,
   }
 
+  console.info(allCommentsWithUrls)
+
   await next()
 }
