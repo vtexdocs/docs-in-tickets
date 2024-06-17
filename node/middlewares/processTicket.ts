@@ -26,20 +26,20 @@ export async function processTicket(
   const requestBody = await bodyParser(ctx.req)
   const zendeskTicket = requestBody.ticketId
 
-  console.info('Ticket ID: ')
-  console.info(zendeskTicket)
-
   const zendesk = ctx.clients.zendesk
   const redshift = ctx.clients.redshift
 
   let allCommentsWithUrls = []
   let redshiftResponse: string | void = ''
+  let page = 1
 
   while (1==1) {
-    const ticketComments = await zendesk.getComments(zendeskTicket)
+    const zendeskData = await zendesk.getComments(zendeskTicket, page)
+    const ticketComments = zendeskData.comments
+    const nextPage = zendeskData.next_page
 
     // Iterate over comments
-    for (const comment of ticketComments.comments) {
+    for (const comment of ticketComments) {
       // Get an array of all urls in the comment
       const allUrls = comment.html_body
         .split('href="')
@@ -96,9 +96,11 @@ export async function processTicket(
       }
     }
 
-    if (ticketComments.next_page) {
+    if (nextPage == null) {
       break
     }
+
+    page = page + 1
   }
 
   ctx.status = 200
@@ -107,8 +109,6 @@ export async function processTicket(
     redShift: redshiftResponse,
     docsUrlsData: allCommentsWithUrls,
   }
-
-  console.info(allCommentsWithUrls)
 
   await next()
 }
