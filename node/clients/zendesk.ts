@@ -19,8 +19,8 @@ export default class ZendeskClient extends ExternalClient {
     })
   }
 
-  public async getComments(ticketId: string) {
-    const url = `https://vtexhelp1704480599.zendesk.com/api/v2/tickets/${ticketId}/comments.json`
+  public async getComments(ticketId: string, page: number=1) {
+    const url = `https://vtexhelp1704480599.zendesk.com/api/v2/tickets/${ticketId}/comments.json?page=${page}`
 
     return this.http.get(
       url,
