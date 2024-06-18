@@ -12,14 +12,7 @@ export async function verifyZendeskSignature (
   ) {
   console.info('Running verifyZendeskSignature')
 
-  const requestBody = await bodyParser(ctx.req)
-  const requestSignature = ctx.request.headers.x-zendesk-webhook-signature
-  const requestSignatureTimestamp = ctx.request.headers.x-zendesk-webhook-signature-timestamp
-  console.info('zendesk signature')
-  console.info(requestSignature)
-  console.info('zendesk signature timestamp')
-  console.info(requestSignatureTimestamp)
-
+  // Determining whether the signature is compatible with the expected, according to the secret key provided by zendesk. This key is exclusive to this webhook.
   function isValidSignature(signature: string, body: string, timestamp: string): boolean {
 
     const hmac = crypto.createHmac(SIGNING_SECRET_ALGORITHM, ZENDESK_SECRET_KEY)
@@ -33,12 +26,34 @@ export async function verifyZendeskSignature (
     )
   }
 
-  if (!(isValidSignature(requestSignature, requestBody, requestSignatureTimestamp))) {
+  if (ctx.request.headers['x-zendesk-webhook-signature'] !== undefined) {
+    const requestBody = await bodyParser(ctx.req)
+    const requestSignature: string = ctx.request.headers['x-zendesk-webhook-signature'] as string
+    const requestSignatureTimestamp: string = ctx.request.headers['x-zendesk-webhook-signature-timestamp'] as string
+    console.info('zendesk signature')
+    console.info(requestSignature)
+    console.info('zendesk signature timestamp')
+    console.info(requestSignatureTimestamp)
+
+    if (isValidSignature(requestSignature, requestBody, requestSignatureTimestamp)) {
+
+      console.info('Zendesk signature verified.')
+      await next()
+
+    } else {
+      ctx.status = 400
+      ctx.response.body = {
+        message: 'Zendesk signature not valid.'
+      }
+      console.info('Zendesk signature not valid.')
+      return
+    }
+  } else {
     ctx.status = 400
     ctx.response.body = {
-      message: 'Zendesk signature not found or not valid.'
+      message: 'Zendesk signature not found.'
     }
+    console.info('Zendesk signature not found')
+    return
   }
-
-  await next()
 }
