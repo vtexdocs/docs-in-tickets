@@ -2,8 +2,8 @@ import type { ClientsConfig, ServiceContext, RecorderState } from '@vtex/api'
 import { LRUCache, method, Service } from '@vtex/api'
 
 import { Clients } from './clients'
-import { processMessage } from './middlewares/processMessage'
 import { processTicket } from './middlewares/processTicket'
+import { verifyZendeskSignature } from './middlewares/verifyZendeskSignature'
 
 const TIMEOUT_MS = 800
 
@@ -49,11 +49,8 @@ export default new Service({
   clients,
   routes: {
     // `status` is the route ID from service.json. It maps to an array of middlewares (or a single handler).
-    messages: method({
-      POST: [processMessage],
-    }),
     tickets: method({
-      POST: [processTicket],
+      POST: [verifyZendeskSignature, processTicket],
     }),
   },
 })
