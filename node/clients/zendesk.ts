@@ -2,8 +2,8 @@
 
 import { ExternalClient, IOContext, InstanceOptions } from '@vtex/api'
 
-const username = 'pedro.costa@vtex.com'
-const password = 'MUZa7N_FcPyE'
+const username = 'xxxxxxxxx'
+const password = 'xxxxxxxxx'
 const authValue = btoa(`${username}:${password}`)
 const requestHeaders = {
   'Content-Type': 'application/json',
