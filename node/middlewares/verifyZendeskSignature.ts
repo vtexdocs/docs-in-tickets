@@ -22,9 +22,6 @@ export async function verifyZendeskSignature (
       Buffer.from(signature, 'base64'),
       Buffer.from(sig.toString(), 'base64')
     )
-    console.info(signature)
-    console.info(sig)
-    console.info(comparison)
 
     return (
        comparison === 0
@@ -33,11 +30,10 @@ export async function verifyZendeskSignature (
 
   if (ctx.request.headers['x-zendesk-webhook-signature'] !== undefined) {
     const requestBody = await bodyParser(ctx.req, { returnRawBody: true })
-    console.info('body >>> '+requestBody)
     const requestSignature: string = ctx.request.headers["x-zendesk-webhook-signature"] as string
     const requestSignatureTimestamp: string = ctx.request.headers["x-zendesk-webhook-signature-timestamp"] as string
 
-    if (isValidSignature(requestSignature, requestBody.toString(), requestSignatureTimestamp)) {
+    if (isValidSignature(requestSignature, requestBody.raw, requestSignatureTimestamp)) {
 
       console.info('Zendesk signature verified successfully.')
       await next()
