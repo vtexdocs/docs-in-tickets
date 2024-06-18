@@ -3,8 +3,8 @@
 import bodyParser from 'co-body'
 import * as crypto from 'crypto'
 
-const ZENDESK_SECRET_KEY = 'Svsr2aAkNENHpOKgAey-Nd2BG-UeN5mvnmKXvExcpRg='
-const SIGNING_SECRET_ALGORITHM = 'sha256'
+const ZENDESK_SECRET_KEY = "sTrLIuJluacG6z7gfrHSwECq7Nw-RzFj6yGgGyOrR5w="
+const SIGNING_SECRET_ALGORITHM = "sha256"
 
 export async function verifyZendeskSignature (
   ctx: Context,
@@ -32,13 +32,14 @@ export async function verifyZendeskSignature (
   }
 
   if (ctx.request.headers['x-zendesk-webhook-signature'] !== undefined) {
-    const requestBody = await bodyParser(ctx.req)
-    const requestSignature: string = ctx.request.headers['x-zendesk-webhook-signature'] as string
-    const requestSignatureTimestamp: string = ctx.request.headers['x-zendesk-webhook-signature-timestamp'] as string
+    const requestBody = await bodyParser(ctx.req, { returnRawBody: true })
+    console.info('body >>> '+requestBody)
+    const requestSignature: string = ctx.request.headers["x-zendesk-webhook-signature"] as string
+    const requestSignatureTimestamp: string = ctx.request.headers["x-zendesk-webhook-signature-timestamp"] as string
 
-    if (isValidSignature(requestSignature, requestBody, requestSignatureTimestamp)) {
+    if (isValidSignature(requestSignature, requestBody.toString(), requestSignatureTimestamp)) {
 
-      console.info('Zendesk signature verified.')
+      console.info('Zendesk signature verified successfully.')
       await next()
 
     } else {
