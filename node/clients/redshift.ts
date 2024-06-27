@@ -26,11 +26,13 @@ export default class RedshiftClient extends ExternalClient {
     super('https://rc.vtex.com', ctx, {
       ...options,
       retries: 2,
+      timeout: 2000,
       headers: requestHeaders,
     })
   }
 
   public async saveMessage(messageData: MessageData) {
+
     return this.http.post(
       url,
       {
