@@ -14,6 +14,10 @@ const helpUrl = 'https://help.vtex.com'
 const devUrl = 'https://developers.vtex.com'
 const helpUrlSlash = 'https://help.vtex.com/'
 const devUrlSlash = 'https://developers.vtex.com/'
+const helpUrlHttp = 'http://help.vtex.com'
+const devUrlHttp = 'http://developers.vtex.com'
+const helpUrlSlashHttp = 'http://help.vtex.com/'
+const devUrlSlashHttp = 'http://developers.vtex.com/'
 const helpUrlShortSlash = 'help.vtex.com/'
 const devUrlShortSlash = 'developers.vtex.com/'
 
@@ -30,7 +34,6 @@ export async function processTicket(
   const redshift = ctx.clients.redshift
 
   let allCommentsWithUrls = []
-  let redshiftResponse: string | void = ''
   let page = 1
 
   while (1==1) {
@@ -44,7 +47,7 @@ export async function processTicket(
       const allUrls = comment.html_body
         .split('href="')
         .slice(1)
-        .map((x: string) => x.split('">')[0])
+        .map((x: string) => x.split('"')[0])
 
       let vtexPortalsUrls = []
 
@@ -65,6 +68,10 @@ export async function processTicket(
         .filter((url: string) => url !== devUrlShort)
         .filter((url: string) => url !== helpUrlShortSlash)
         .filter((url: string) => url !== devUrlShortSlash)
+        .filter((url: string) => url !== helpUrlHttp)
+        .filter((url: string) => url !== devUrlHttp)
+        .filter((url: string) => url !== helpUrlSlashHttp)
+        .filter((url: string) => url !== devUrlSlashHttp)
 
       // Checking to see which portals the articles pertain to
       const hasHelpArticle = docUrls.some((url: string) =>
@@ -92,7 +99,8 @@ export async function processTicket(
 
         allCommentsWithUrls.push(messageData)
 
-        redshiftResponse = await redshift.saveMessage(messageData)
+        const redshiftResponse = await redshift.saveMessage(messageData)
+        console.log('redshift >>> '+JSON.stringify(redshiftResponse))
       }
     }
 
@@ -106,9 +114,9 @@ export async function processTicket(
   ctx.status = 200
   ctx.response.body = {
     message: 'ticket processed',
-    redShift: redshiftResponse,
     docsUrlsData: allCommentsWithUrls,
   }
+  console.info(allCommentsWithUrls)
 
   await next()
 }

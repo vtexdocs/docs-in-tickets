@@ -3,7 +3,7 @@
 import bodyParser from 'co-body'
 import * as crypto from 'crypto'
 
-const ZENDESK_SECRET_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+const ZENDESK_SECRET_KEY = "xxxxxxxxxxxxxxxxxxxxxxx"
 const SIGNING_SECRET_ALGORITHM = "sha256"
 
 export async function verifyZendeskSignature (

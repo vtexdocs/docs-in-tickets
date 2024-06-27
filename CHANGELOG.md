@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+First version to go to production:
+- Receives webhook from zendesk
+- Verifies webhook signature
+- Gets comment data from Zendesk API
+- Processes comment data
+- Saves relevant comment data to redshift
 
 ## Added
 - Initial code
