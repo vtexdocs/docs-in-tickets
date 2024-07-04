@@ -1,6 +1,5 @@
 // The processMessage function gets the ticket message from the context and formats its content to be saved in a database later.
 
-import bodyParser from 'co-body'
 import { or } from 'ramda'
 
 import type { MessageData } from '../clients/redshift'
@@ -27,7 +26,8 @@ export async function processTicket(
 ) {
   console.info('Running processTicket')
 
-  const requestBody = await bodyParser(ctx.req)
+  const requestBody = ctx.state.body
+  console.info(requestBody)
   const zendeskTicket = requestBody.ticketId
 
   const zendesk = ctx.clients.zendesk
@@ -99,8 +99,7 @@ export async function processTicket(
 
         allCommentsWithUrls.push(messageData)
 
-        const redshiftResponse = await redshift.saveMessage(messageData)
-        console.log('redshift >>> '+JSON.stringify(redshiftResponse))
+        await redshift.saveMessage(messageData)
       }
     }
 
