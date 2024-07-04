@@ -1,7 +1,7 @@
 {
   "name": "docs-in-tickets",
   "vendor": "vtexhelp",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "title": "Docs in Tickets",
   "description": "Process information about documentation links sent in support tickets.",
   "categories": [],
