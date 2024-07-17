@@ -2,9 +2,10 @@
 // https://developer.zendesk.com/documentation/webhooks/verifying/#verifying-the-signature
 import bodyParser from 'co-body'
 import * as crypto from 'crypto'
+import { returnError } from './errorLogs'
 
-const ZENDESK_SECRET_KEY_PRODUCTION = "xxxxxxxxxxxxxxxxx"
-const ZENDESK_SECRET_KEY_SANDBOX = "xxxxxxxxxxxxxxxxxx"
+const ZENDESK_SECRET_KEY_PRODUCTION = "xxxxxxxxxx"
+const ZENDESK_SECRET_KEY_SANDBOX = "xxxxxxxxxx"
 const SIGNING_SECRET_ALGORITHM = "sha256"
 
 export async function verifyZendeskSignature (
@@ -27,43 +28,41 @@ export async function verifyZendeskSignature (
     return (comparison === 0)
   }
 
+  const requestBody = await bodyParser(ctx.req, { returnRawBody: true })
+  ctx.state.body = requestBody.parsed
+  console.log(requestBody.parsed.ticketId)
+
+  if (requestBody.parsed.ticketId == undefined) {
+    returnError('undefined', 400, 'ticketId not found.', ctx)
+  }
+
+  const zendeskTicket = requestBody.parsed.ticketId
+
   if (ctx.request.headers['x-zendesk-webhook-signature'] !== undefined) {
-    const requestBody = await bodyParser(ctx.req, { returnRawBody: true })
-    ctx.state.body = requestBody.parsed
-    console.info(ctx.state.body)
+
     const requestSignature: string = ctx.request.headers["x-zendesk-webhook-signature"] as string
     const requestSignatureTimestamp: string = ctx.request.headers["x-zendesk-webhook-signature-timestamp"] as string
 
     if (isValidSignature(requestSignature, requestBody.raw, requestSignatureTimestamp, ZENDESK_SECRET_KEY_PRODUCTION)) {
 
-      console.info('Zendesk production signature verified successfully.')
+      // console.info('Zendesk production signature verified successfully.')
       await next()
 
     } else {
 
       if (isValidSignature(requestSignature, requestBody.raw, requestSignatureTimestamp, ZENDESK_SECRET_KEY_SANDBOX)) {
 
-      console.info('Zendesk sandbox signature verified successfully.')
+      // console.info('Zendesk sandbox signature verified successfully.')
       await next()
 
       } else {
-
-      ctx.status = 400
-      ctx.response.body = {
-        message: 'Zendesk signature not valid.'
-      }
-      console.info('Zendesk signature not valid.')
+      returnError(zendeskTicket, 400, 'Zendesk signature not valid.', ctx)
       return
-
       }
 
     }
   } else {
-    ctx.status = 400
-    ctx.response.body = {
-      message: 'Zendesk signature not found.'
-    }
-    console.info('Zendesk signature not found')
+    returnError(zendeskTicket, 400, `Zendesk signature not found.`, ctx)
     return
   }
 }

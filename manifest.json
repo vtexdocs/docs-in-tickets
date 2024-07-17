@@ -1,7 +1,7 @@
 {
   "name": "docs-in-tickets",
   "vendor": "vtexhelp",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "title": "Docs in Tickets",
   "description": "Process information about documentation links sent in support tickets.",
   "categories": [],
@@ -25,6 +25,13 @@
       "name": "outbound-access",
       "attrs": {
         "host": "vtexhelp1704480599.zendesk.com",
+        "path": "*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "hooks.slack.com",
         "path": "*"
       }
     },

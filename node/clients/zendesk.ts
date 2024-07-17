@@ -2,13 +2,14 @@
 
 import { ExternalClient, IOContext, InstanceOptions } from '@vtex/api'
 
-const username = 'xxxxxxxxxxxxxxxxx'
-const token = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+// These are the real credentials
+const username = 'xxxxxxxxxx'
+const token = 'xxxxxxxxxx'
 const authValue = btoa(`${username}/token:${token}`)
 
-// Below are sandbox auth variables, just to facilitate debugging. Note that the format is different.
-// const username = 'xxxxxxxxxxxxxxxxx'
-// const token = 'xxxxxxxxxxxxxxxxx'
+// Below are sandbox auth variables, just to facilitate debugging. Note that the authvalue format is different.
+// const username = 'xxxxxxxxxx'
+// const token = 'xxxxxxxxxx'
 // const authValue = btoa(`${username}:${token}`)
 
 const requestHeaders = {
