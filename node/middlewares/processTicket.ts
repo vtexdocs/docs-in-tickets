@@ -3,6 +3,7 @@
 import { or } from 'ramda'
 
 import type { MessageData } from '../clients/redshift'
+import { returnError } from './errorLogs'
 
 // Defining URLs that will be used to parse and process the comment data
 // Substrings to look for and to exclude
@@ -24,10 +25,9 @@ export async function processTicket(
   ctx: Context,
   next: () => Promise<Record<string, unknown>>
 ) {
-  console.info('Running processTicket')
+  console.log('Running processTicket')
 
   const requestBody = ctx.state.body
-  console.info(requestBody)
   const zendeskTicket = requestBody.ticketId
 
   const zendesk = ctx.clients.zendesk
@@ -35,11 +35,25 @@ export async function processTicket(
 
   let allCommentsWithUrls = []
   let page = 1
+  interface Comment {
+    html_body: string,
+    id: number,
+    author_id: number,
+    created_at: string
+  }
+  let ticketComments: Array<Comment>
+  let nextPage: number
 
   while (1==1) {
-    const zendeskData = await zendesk.getComments(zendeskTicket, page)
-    const ticketComments = zendeskData.comments
-    const nextPage = zendeskData.next_page
+
+    try {
+      const zendeskData = await zendesk.getComments(zendeskTicket, page)
+      ticketComments = zendeskData.comments
+      nextPage = zendeskData.next_page
+    } catch (error) {
+      returnError(zendeskTicket, 500, `Error trying to get ticket data from Zendesk >>> ${error}`, ctx)
+      return
+    }
 
     // Iterate over comments
     for (const comment of ticketComments) {
@@ -99,7 +113,13 @@ export async function processTicket(
 
         allCommentsWithUrls.push(messageData)
 
-        await redshift.saveMessage(messageData)
+        try {
+          console.log('try redshift')
+          await redshift.saveMessage(messageData)
+          console.log(messageData.numberOfArticleUrls)
+        } catch (error) {
+          returnError(zendeskTicket, 500, `Error trying to save comment data to RedShift >>> ${error}`, ctx)
+        }
       }
     }
 
@@ -115,7 +135,9 @@ export async function processTicket(
     message: 'ticket processed',
     docsUrlsData: allCommentsWithUrls,
   }
-  console.info(allCommentsWithUrls)
+
+  console.log(`comments processed: ${allCommentsWithUrls.length}`)
+  console.log('processTicket done')
 
   await next()
 }
