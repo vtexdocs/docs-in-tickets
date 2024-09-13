@@ -2,10 +2,10 @@
 // https://developer.zendesk.com/documentation/webhooks/verifying/#verifying-the-signature
 import bodyParser from 'co-body'
 import * as crypto from 'crypto'
-import { returnError } from './errorLogs'
+import { returnErrorTicket } from './errorLogs'
 
-const ZENDESK_SECRET_KEY_PRODUCTION = "xxxxxxxxxx"
-const ZENDESK_SECRET_KEY_SANDBOX = "xxxxxxxxxx"
+const ZENDESK_SECRET_KEY_PRODUCTION = "{secret}"
+const ZENDESK_SECRET_KEY_SANDBOX = "{secret}"
 const SIGNING_SECRET_ALGORITHM = "sha256"
 
 export async function verifyZendeskSignature (
@@ -33,7 +33,7 @@ export async function verifyZendeskSignature (
   console.log(requestBody.parsed.ticketId)
 
   if (requestBody.parsed.ticketId == undefined) {
-    returnError('undefined', 400, 'ticketId not found.', ctx)
+    returnErrorTicket('undefined', 400, 'ticketId not found.', ctx)
   }
 
   const zendeskTicket = requestBody.parsed.ticketId
@@ -56,13 +56,13 @@ export async function verifyZendeskSignature (
       await next()
 
       } else {
-      returnError(zendeskTicket, 400, 'Zendesk signature not valid.', ctx)
+        returnErrorTicket(zendeskTicket, 400, 'Zendesk signature not valid.', ctx)
       return
       }
 
     }
   } else {
-    returnError(zendeskTicket, 400, `Zendesk signature not found.`, ctx)
+    returnErrorTicket(zendeskTicket, 400, `Zendesk signature not found.`, ctx)
     return
   }
 }

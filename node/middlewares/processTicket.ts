@@ -3,7 +3,7 @@
 import { or } from 'ramda'
 
 import type { MessageData } from '../clients/redshift'
-import { returnError } from './errorLogs'
+import { returnErrorTicket } from './errorLogs'
 
 // Defining URLs that will be used to parse and process the comment data
 // Substrings to look for and to exclude
@@ -20,6 +20,22 @@ const helpUrlSlashHttp = 'http://help.vtex.com/'
 const devUrlSlashHttp = 'http://developers.vtex.com/'
 const helpUrlShortSlash = 'help.vtex.com/'
 const devUrlShortSlash = 'developers.vtex.com/'
+const helpAnnouncements = 'https://help.vtex.com/announcements'
+const helpAnnouncementsSlash = 'https://help.vtex.com/announcements'
+const helpAnnouncementsShort = 'help.vtex.com/announcements'
+const helpAnnouncementsShortSlash = 'https://help.vtex.com/announcements'
+const helpAnnouncementsPt = 'https://help.vtex.com/pt/announcements'
+const helpAnnouncementsSlashPt = 'https://help.vtex.com/pt/announcements'
+const helpAnnouncementsShortPt = 'help.vtex.com/pt/announcements'
+const helpAnnouncementsShortSlashPt = 'https://help.vtex.com/pt/announcements'
+const helpAnnouncementsEn = 'https://help.vtex.com/en/announcements'
+const helpAnnouncementsSlashEn = 'https://help.vtex.com/en/announcements'
+const helpAnnouncementsShortEn = 'help.vtex.com/en/announcements'
+const helpAnnouncementsShortSlashEn = 'https://help.vtex.com/en/announcements'
+const helpAnnouncementsEs = 'https://help.vtex.com/es/announcements'
+const helpAnnouncementsSlashEs = 'https://help.vtex.com/es/announcements'
+const helpAnnouncementsShortEs = 'help.vtex.com/es/announcements'
+const helpAnnouncementsShortSlashEs = 'https://help.vtex.com/es/announcements'
 
 export async function processTicket(
   ctx: Context,
@@ -51,7 +67,7 @@ export async function processTicket(
       ticketComments = zendeskData.comments
       nextPage = zendeskData.next_page
     } catch (error) {
-      returnError(zendeskTicket, 500, `Error trying to get ticket data from Zendesk >>> ${error}`, ctx)
+      returnErrorTicket(zendeskTicket, 500, `Error trying to get ticket data from Zendesk >>> ${error}`, ctx)
       return
     }
 
@@ -86,6 +102,22 @@ export async function processTicket(
         .filter((url: string) => url !== devUrlHttp)
         .filter((url: string) => url !== helpUrlSlashHttp)
         .filter((url: string) => url !== devUrlSlashHttp)
+        .filter((url: string) => url !== helpAnnouncements)
+        .filter((url: string) => url !== helpAnnouncementsSlash)
+        .filter((url: string) => url !== helpAnnouncementsShort)
+        .filter((url: string) => url !== helpAnnouncementsShortSlash)
+        .filter((url: string) => url !== helpAnnouncementsPt)
+        .filter((url: string) => url !== helpAnnouncementsSlashPt)
+        .filter((url: string) => url !== helpAnnouncementsShortPt)
+        .filter((url: string) => url !== helpAnnouncementsShortSlashPt)
+        .filter((url: string) => url !== helpAnnouncementsEn)
+        .filter((url: string) => url !== helpAnnouncementsSlashEn)
+        .filter((url: string) => url !== helpAnnouncementsShortEn)
+        .filter((url: string) => url !== helpAnnouncementsShortSlashEn)
+        .filter((url: string) => url !== helpAnnouncementsEs)
+        .filter((url: string) => url !== helpAnnouncementsSlashEs)
+        .filter((url: string) => url !== helpAnnouncementsShortEs)
+        .filter((url: string) => url !== helpAnnouncementsShortSlashEs)
 
       // Checking to see which portals the articles pertain to
       const hasHelpArticle = docUrls.some((url: string) =>
@@ -114,11 +146,11 @@ export async function processTicket(
         allCommentsWithUrls.push(messageData)
 
         try {
-          console.log('try redshift')
+          // console.log('try redshift')
           await redshift.saveMessage(messageData)
           console.log(messageData.numberOfArticleUrls)
         } catch (error) {
-          returnError(zendeskTicket, 500, `Error trying to save comment data to RedShift >>> ${error}`, ctx)
+          returnErrorTicket(zendeskTicket, 500, `Error trying to save comment data to RedShift >>> ${error}`, ctx)
         }
       }
     }
