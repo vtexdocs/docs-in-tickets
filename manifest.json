@@ -1,7 +1,7 @@
 {
   "name": "docs-in-tickets",
   "vendor": "vtexhelp",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "title": "Docs in Tickets",
   "description": "Process information about documentation links sent in support tickets.",
   "categories": [],
@@ -39,6 +39,13 @@
       "name": "outbound-access",
       "attrs": {
         "host": "vtexhelp.zendesk.com",
+        "path": "*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "data-consumption.vtex.com",
         "path": "*"
       }
     }

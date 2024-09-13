@@ -4,7 +4,7 @@
 import { ExternalClient } from '@vtex/api'
 import type { IOContext, InstanceOptions } from '@vtex/api'
 
-const url = 'https://hooks.slack.com/services/xxxxxxxxxx'
+const url = 'https://hooks.slack.com/services/{secret}'
 const requestHeaders = {
   'Content-Type': 'application/json',
 }

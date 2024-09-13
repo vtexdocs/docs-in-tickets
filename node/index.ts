@@ -4,6 +4,9 @@ import { LRUCache, method, Service } from '@vtex/api'
 import { Clients } from './clients'
 import { processTicket } from './middlewares/processTicket'
 import { verifyZendeskSignature } from './middlewares/verifyZendeskSignature'
+import { getCommentData } from './middlewares/getCommentData'
+import { processCommentData } from './middlewares/processCommentData'
+import { validateParams } from './middlewares/validateParams'
 
 const TIMEOUT_MS = 800
 
@@ -48,9 +51,11 @@ declare global {
 export default new Service({
   clients,
   routes: {
-    // `status` is the route ID from service.json. It maps to an array of middlewares (or a single handler).
     tickets: method({
       POST: [verifyZendeskSignature, processTicket],
+    }),
+    articles: method({
+      GET: [validateParams, getCommentData, processCommentData],
     }),
   },
 })

@@ -9,6 +9,10 @@
     "tickets": {
       "path": "/tickets",
       "public": true
+    },
+    "articles": {
+      "path": "/articles",
+      "public": true
     }
   }
 }
