@@ -16,6 +16,16 @@
         "summary": "Retrieve article data.",
         "parameters": [
           {
+            "name": "VtexIdclientAutCookie",
+            "in": "header",
+            "required": true,
+            "description": "VTEX user token for account `vtexhelp`, such as obtained through the [Credential Portal](https://credentialportal.vtex.com/) or with the VETX IO CLI (`vtex local token`).",
+            "schema": {
+              "type": "string",
+              "example": "https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x"
+            }
+          },
+          {
             "name": "startDate",
             "in": "query",
             "required": true,
@@ -620,22 +630,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "VtexIdclientAutCookie": []
-          }
-        ]
-      }
-    }
-  },
-  "components": {
-    "securitySchemes": {
-      "VtexIdclientAutCookie": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "VtexIdclientAutCookie",
-        "description": "VTEX user token for account `vtexhelp`, such as obtained through the [Credential Portal](https://credentialportal.vtex.com/) or with the VETX IO CLI (`vtex local token`)."
+        }
       }
     }
   }
