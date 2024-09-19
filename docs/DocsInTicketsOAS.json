@@ -1,0 +1,642 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "VTEX Help Articles API",
+    "description": "API for retrieving data about VTEX Help Center and Dev Portal article mentions in Zendesk tickets.",
+    "version": "1.0.5"
+  },
+  "servers": [
+    {
+      "url": "https://vtexhelp.myvtex.com"
+    }
+  ],
+  "paths": {
+    "/articles": {
+      "get": {
+        "summary": "Retrieve article data.",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": true,
+            "description": "The start date for filtering articles (yyyy-mm-dd).",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2024-08-01"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": true,
+            "description": "The end date for filtering articles (yyyy-mm-dd).",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2024-08-31"
+            }
+          },
+          {
+            "name": "containsHelpArticle",
+            "in": "query",
+            "required": false,
+            "description": "Indicates whether only comments mentioning Help Center articles should be retrieved.",
+            "schema": {
+              "type": "boolean",
+              "example": true
+            }
+          },
+          {
+            "name": "containsDevArticle",
+            "in": "query",
+            "required": false,
+            "description": "Indicates whether only comments mentioning Dev Portal articles should be retrieved.",
+            "schema": {
+              "type": "boolean",
+              "example": true
+            }
+          },
+          {
+            "name": "articleUrl",
+            "in": "query",
+            "required": false,
+            "description": "Filter to include articles matching the provided URL.",
+            "schema": {
+              "type": "string",
+              "format": "url",
+              "example": "https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of support ticket data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "object",
+                      "description": "Query parameters that were sent in the request.",
+                      "properties": {
+                        "startDate": {
+                          "type": "string",
+                          "description": "`startDate` sent in the request.",
+                          "format": "date",
+                          "example": "2024-08-01"
+                        },
+                        "endDate": {
+                          "type": "string",
+                          "description": "`endDate` sent in the request.",
+                          "format": "date",
+                          "example": "2024-08-31"
+                        },
+                        "containsHelpArticle": {
+                          "type": "string",
+                          "description": "`containsHelpArticle` value sent in the request.",
+                          "example": "true"
+                        },
+                        "containsDevArticle": {
+                          "type": "string",
+                          "description": "`containsDevArticle` value sent in the request.",
+                          "example": "true"
+                        },
+                        "articleUrl": {
+                          "type": "string",
+                          "description": "`articleUrl` value sent in the request.",
+                          "example": "https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x"
+                        }
+                      }
+                    },
+                    "tickets": {
+                      "type": "object",
+                      "description": "Information about tickets containing comments returned in the query.",
+                      "properties": {
+                        "quantity": {
+                          "type": "integer",
+                          "description": "Number of tickets containing comments returned by the query.",
+                          "example": 1
+                        },
+                        "ids": {
+                          "type": "array",
+                          "description": "IDs of tickets containing comments returned by the query.",
+                          "items": {
+                            "type": "string",
+                            "description": "Zendesk ticket ID.",
+                            "example": "1088320"
+                          }
+                        }
+                      }
+                    },
+                    "comments": {
+                      "type": "object",
+                      "description": "Information about comments returned in the query.",
+                      "properties": {
+                        "quantity": {
+                          "type": "integer",
+                          "description": "Number of comments returned in the query.",
+                          "example": 14
+                        },
+                        "sample": {
+                          "type": "object",
+                          "description": "Details about a sample of the comments returned in the query.",
+                          "properties": {
+                            "quantity": {
+                              "type": "integer",
+                              "description": "Number of comments in the sample. The maximum sample size is 20.",
+                              "example": 20
+                            },
+                            "data": {
+                              "type": "array",
+                              "description": "Sample comments detailed information.",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "ticketid": {
+                                    "type": "string",
+                                    "description": "Zendesk ticket ID. You can see the ticket by accessing the URL `https://vtexhelp.zendesk.com/agent/tickets/{ticketid}`",
+                                    "example": "1088320"
+                                  },
+                                  "commentid": {
+                                    "type": "integer",
+                                    "description": "Zendesk comment ID.",
+                                    "example": 28739326077851
+                                  },
+                                  "authorid": {
+                                    "type": "integer",
+                                    "description": "Zendesk comment author ID.",
+                                    "example": 1264750706070
+                                  },
+                                  "createdat": {
+                                    "type": "integer",
+                                    "description": "Date and time of the comment creation.",
+                                    "example": 1725006375000
+                                  },
+                                  "containshelparticle": {
+                                    "type": "boolean",
+                                    "description": "Indicates whether the comment contains a Help Center article.",
+                                    "example": false
+                                  },
+                                  "containsdevarticle": {
+                                    "type": "boolean",
+                                    "description": "Indicates whether the comment contains a Dev Portal article.",
+                                    "example": true
+                                  },
+                                  "numberofdocsportalsurls": {
+                                    "type": "integer",
+                                    "description": "Number of docs portals URLs contained in the comment. Includes non-article URLs, such as `https://developers.vtex.com/` and `https://help.vtex.com/es/announcements`.",
+                                    "example": 2
+                                  },
+                                  "docsportalsurls": {
+                                    "type": "string",
+                                    "description": "Stringified array of docs portals URLs contained in the comment. Includes non-article URLs, such as `https://developers.vtex.com/` and `https://help.vtex.com/es/announcements`.",
+                                    "example": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]"
+                                  },
+                                  "numberofarticleurls": {
+                                    "type": "integer",
+                                    "description": "Number of article URLs contained in the comment. DOESN'T include non-article URLs, such as `https://developers.vtex.com/` and `https://help.vtex.com/es/announcements`.",
+                                    "example": 2
+                                  },
+                                  "articleurls": {
+                                    "type": "string",
+                                    "description": "Stringified array of articles URLs contained in the comment.   DOESN'T include non-article URLs, such as `https://developers.vtex.com/` and `https://help.vtex.com/es/announcements`.",
+                                    "example": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "query": {
+                      "startDate": "2024-08-30",
+                      "endDate": "2024-08-31",
+                      "containsDevArticle": "true"
+                  },
+                  "tickets": {
+                      "quantity": 94,
+                      "ids": [
+                          "1088320",
+                          "1087602",
+                          "1089526",
+                          "1088846",
+                          "1088682",
+                          "1086933",
+                          "1089568",
+                          "1089570",
+                          "1088002",
+                          "1089483",
+                          "1089076",
+                          "1088595",
+                          "1087910",
+                          "1083154",
+                          "1089604",
+                          "1089557",
+                          "1088945",
+                          "1089667",
+                          "1089681",
+                          "1089122",
+                          "1087936",
+                          "1089690",
+                          "1086992",
+                          "1089110",
+                          "1088615",
+                          "1089243",
+                          "1086821",
+                          "1088254",
+                          "1088740",
+                          "1089589",
+                          "1089718",
+                          "1089723",
+                          "1089648",
+                          "1089733",
+                          "1089617",
+                          "1087880",
+                          "1089252",
+                          "1088361",
+                          "1089642",
+                          "1086537",
+                          "1089774",
+                          "1089222",
+                          "1087873",
+                          "1088655",
+                          "1087277",
+                          "1089388",
+                          "1087792",
+                          "1085399",
+                          "1089789",
+                          "1089712",
+                          "1089796",
+                          "1089516",
+                          "1089820",
+                          "1086526",
+                          "1089613",
+                          "1087796",
+                          "1087740",
+                          "1089431",
+                          "1089700",
+                          "1089499",
+                          "1089684",
+                          "1088764",
+                          "1089731",
+                          "1089458",
+                          "1089782",
+                          "1087478",
+                          "1089244",
+                          "1089427",
+                          "1086621",
+                          "1089561",
+                          "1088350",
+                          "1089886",
+                          "1089307",
+                          "1089889",
+                          "1088605",
+                          "1089891",
+                          "1085883",
+                          "1084921",
+                          "1087558",
+                          "1089198",
+                          "1089412",
+                          "1089952",
+                          "1088100",
+                          "1087460",
+                          "1089930",
+                          "1089965",
+                          "1072193",
+                          "1089360",
+                          "1089910",
+                          "1088881",
+                          "1086930",
+                          "1089769",
+                          "1087491",
+                          "1089961"
+                      ]
+                  },
+                  "comments": {
+                      "quantity": 1539,
+                      "sample": {
+                          "quantity": 20,
+                          "data": [
+                              {
+                                  "ticketid": "1088320",
+                                  "commentid": 28739326077851,
+                                  "authorid": 1264750706070,
+                                  "createdat": 1725006375000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 2,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]",
+                                  "numberofarticleurls": 2,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]"
+                              },
+                              {
+                                  "ticketid": "1088320",
+                                  "commentid": 28739326077851,
+                                  "authorid": 1264750706070,
+                                  "createdat": 1725006375000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 2,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]",
+                                  "numberofarticleurls": 2,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]"
+                              },
+                              {
+                                  "ticketid": "1088320",
+                                  "commentid": 28739326077851,
+                                  "authorid": 1264750706070,
+                                  "createdat": 1725006375000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 2,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]",
+                                  "numberofarticleurls": 2,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]"
+                              },
+                              {
+                                  "ticketid": "1088320",
+                                  "commentid": 28739326077851,
+                                  "authorid": 1264750706070,
+                                  "createdat": 1725006375000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 2,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]",
+                                  "numberofarticleurls": 2,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]"
+                              },
+                              {
+                                  "ticketid": "1088320",
+                                  "commentid": 28739326077851,
+                                  "authorid": 1264750706070,
+                                  "createdat": 1725006375000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 2,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]",
+                                  "numberofarticleurls": 2,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]"
+                              },
+                              {
+                                  "ticketid": "1088320",
+                                  "commentid": 28739326077851,
+                                  "authorid": 1264750706070,
+                                  "createdat": 1725006375000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 2,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]",
+                                  "numberofarticleurls": 2,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]"
+                              },
+                              {
+                                  "ticketid": "1088320",
+                                  "commentid": 28739326077851,
+                                  "authorid": 1264750706070,
+                                  "createdat": 1725006375000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 2,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]",
+                                  "numberofarticleurls": 2,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]"
+                              },
+                              {
+                                  "ticketid": "1088320",
+                                  "commentid": 28739326077851,
+                                  "authorid": 1264750706070,
+                                  "createdat": 1725006375000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 2,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]",
+                                  "numberofarticleurls": 2,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]"
+                              },
+                              {
+                                  "ticketid": "1088320",
+                                  "commentid": 28739326077851,
+                                  "authorid": 1264750706070,
+                                  "createdat": 1725006375000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 2,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]",
+                                  "numberofarticleurls": 2,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]"
+                              },
+                              {
+                                  "ticketid": "1088320",
+                                  "commentid": 28739326077851,
+                                  "authorid": 1264750706070,
+                                  "createdat": 1725006375000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 2,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]",
+                                  "numberofarticleurls": 2,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]"
+                              },
+                              {
+                                  "ticketid": "1088320",
+                                  "commentid": 28739326077851,
+                                  "authorid": 1264750706070,
+                                  "createdat": 1725006375000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 2,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]",
+                                  "numberofarticleurls": 2,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]"
+                              },
+                              {
+                                  "ticketid": "1088320",
+                                  "commentid": 28739326077851,
+                                  "authorid": 1264750706070,
+                                  "createdat": 1725006375000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 2,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]",
+                                  "numberofarticleurls": 2,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]"
+                              },
+                              {
+                                  "ticketid": "1088320",
+                                  "commentid": 28739326077851,
+                                  "authorid": 1264750706070,
+                                  "createdat": 1725006375000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 2,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]",
+                                  "numberofarticleurls": 2,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]"
+                              },
+                              {
+                                  "ticketid": "1088320",
+                                  "commentid": 28739326077851,
+                                  "authorid": 1264750706070,
+                                  "createdat": 1725006375000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 2,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]",
+                                  "numberofarticleurls": 2,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\",\"https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x\"]"
+                              },
+                              {
+                                  "ticketid": "1087602",
+                                  "commentid": 28739887134875,
+                                  "authorid": 27097993675547,
+                                  "createdat": 1725009817000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 1,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\"]",
+                                  "numberofarticleurls": 1,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\"]"
+                              },
+                              {
+                                  "ticketid": "1087602",
+                                  "commentid": 28739887134875,
+                                  "authorid": 27097993675547,
+                                  "createdat": 1725009817000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 1,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\"]",
+                                  "numberofarticleurls": 1,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\"]"
+                              },
+                              {
+                                  "ticketid": "1087602",
+                                  "commentid": 28739887134875,
+                                  "authorid": 27097993675547,
+                                  "createdat": 1725009817000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 1,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\"]",
+                                  "numberofarticleurls": 1,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\"]"
+                              },
+                              {
+                                  "ticketid": "1087602",
+                                  "commentid": 28739887134875,
+                                  "authorid": 27097993675547,
+                                  "createdat": 1725009817000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 1,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\"]",
+                                  "numberofarticleurls": 1,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\"]"
+                              },
+                              {
+                                  "ticketid": "1087602",
+                                  "commentid": 28739887134875,
+                                  "authorid": 27097993675547,
+                                  "createdat": 1725009817000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 1,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\"]",
+                                  "numberofarticleurls": 1,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\"]"
+                              },
+                              {
+                                  "ticketid": "1087602",
+                                  "commentid": 28739887134875,
+                                  "authorid": 27097993675547,
+                                  "createdat": 1725009817000,
+                                  "containshelparticle": false,
+                                  "containsdevarticle": true,
+                                  "numberofdocsportalsurls": 1,
+                                  "docsportalsurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\"]",
+                                  "numberofarticleurls": 1,
+                                  "articleurls": "[\"https://developers.vtex.com/docs/apps/vtex.locale-switcher\"]"
+                              }
+                          ]
+                      }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "This error is probably due to one of the reasons below:\n\r- Your auth token is invalid.\n\r- You sent no auth token.\n\r- The query returns no data."
+                },
+                "example": {
+                  "article": "https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x",
+                  "message": "Error trying to get article data from the DQAPI >>> Error: unexpected end of file"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "This error may happen if your query returns too many results for the DQAPI to handle. In this case, try narrowing down your query by adding filters or reducing the timespan between `startDate` and `endDate`.",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "ProxyTimeout"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Request to vtexhelp.docs-in-tickets@1.0.5 timed out after 2.0014883"
+                    },
+                    "source": {
+                      "type": "string",
+                      "example": "Vtex.Kube.Router.WebApi"
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "9fe3ef05c649433b8464e6ed2330f7d8"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "ProxyTimeout",
+                  "message": "Request to vtexhelp.docs-in-tickets@1.0.5 timed out after 2.0024593",
+                  "source": "Vtex.Kube.Router.WebApi",
+                  "requestId": "5f37561bb26d491abd836b564e79cc63"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "VtexIdclientAutCookie": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "VtexIdclientAutCookie": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "VtexIdclientAutCookie",
+        "description": "VTEX user token for account `vtexhelp`, such as obtained through the [Credential Portal](https://credentialportal.vtex.com/) or with the VETX IO CLI (`vtex local token`)."
+      }
+    }
+  }
+}
