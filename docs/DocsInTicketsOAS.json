@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "VTEX Help Articles API",
-    "description": "API for retrieving data about VTEX Help Center and Dev Portal article mentions in Zendesk tickets.",
+    "description": "API for retrieving data about VTEX Help Center and Dev Portal article mentions in Zendesk tickets.\n\r\n\rNote that we are yet to implement pagination, so the DQAPI can't deal with requests that return too many results. For now, recommended use cases include:\n\r\n\r- Getting data related to a given article with period of up to one month\n\r\n\r- Getting data without specifying article with a period of one or two days.\n\r\n\r### Authentication\n\r\n\rYou must use the header `VtexIdclientAutCookie`. More details below",
     "version": "1.0.5"
   },
   "servers": [
@@ -19,7 +19,7 @@
             "name": "VtexIdclientAutCookie",
             "in": "header",
             "required": true,
-            "description": "VTEX user token for account `vtexhelp`, such as obtained through the [Credential Portal](https://credentialportal.vtex.com/) or with the VETX IO CLI (`vtex local token`).",
+            "description": "VTEX user token for account `vtexhelp`, such as obtained through the [Credential Portal](https://credentialportal.vtex.com/) or with the VTEX IO CLI (`vtex local token`).",
             "schema": {
               "type": "string",
               "example": "https://developers.vtex.com/docs/apps/vtex.binding-selector@2.x"
