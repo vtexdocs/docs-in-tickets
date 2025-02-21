@@ -17,25 +17,34 @@ export async function returnErrorTicket(
   }
 }
 
-export async function returnErrorUrl(
-  articleUrl: string | undefined,
+export async function returnErrorQuery(
+  params: {
+    startDate: string | string[],
+    endDate: string | string[],
+    containsHelpArticle?: string | string[],
+    containsDevArticle?: string | string[],
+    articleUrl?: string | string[]
+  },
   status: number,
   errorMessage: string,
   ctx: Context
 ) {
   // Making sure the returned url is not between %%
   var urlToReturn: string | undefined
-  if (articleUrl) {
-    urlToReturn = articleUrl.slice(1, -1)
+  if (params.articleUrl) {
+    urlToReturn = params.articleUrl.slice(1, -1) as string
   } else {
-    urlToReturn = articleUrl
+    urlToReturn = params.articleUrl
   }
   const slack = ctx.clients.slack
-  slack.sendLog(`Article: ${urlToReturn}\n${errorMessage}`, 'error')
+  slack.sendLog(`Query: ${JSON.stringify({...params, articleUrl: urlToReturn})}\n${errorMessage}`, 'error')
 
   ctx.status = status
   ctx.response.body = {
-    article: urlToReturn,
+    query: {
+      ...params,
+      articleUrl: urlToReturn
+    },
     message: errorMessage
   }
 }
