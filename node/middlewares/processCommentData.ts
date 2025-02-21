@@ -1,6 +1,6 @@
 // Getting comment data from the Data Lake
 
-interface Comment {
+export interface Comment {
   ticketid: string
   commentid: number
   authorid: number
@@ -11,15 +11,18 @@ interface Comment {
   docsportalsurls: string[]
   numberofarticleurls: number
   articleurls: string[]
+  total_records: number
 }
 
 export async function processCommentData(
   ctx: Context,
   next: () => Promise<Record<string, unknown>>
 ) {
-  console.log('Running processUniqueTicketIds')
+  console.log('Running processCommentData')
 
   const articleData = ctx.state.body.articleData
+
+  console.log('articleData.length: ', articleData.length)
 
   // Get unique tickets
   const uniqueTicketIds = [...new Set(articleData.map((item: Comment) => item.ticketid))];

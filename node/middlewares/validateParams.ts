@@ -1,8 +1,7 @@
 // Getting params and validating them
 
 import { fetchCommentsParams } from '../clients/dataQuery'
-import { returnErrorUrl } from './errorLogs'
-// import { returnErrorUrl } from '../middlewares/errorLogs'
+import { returnErrorQuery } from './errorLogs'
 
 // Date validation function
 function isValidDate(date: string): boolean {
@@ -48,30 +47,57 @@ export async function validateParams(
     ? `%${receivedQueryStrings.articleUrl}%`
     : undefined
 
+    // Parse other params
+
+    const receivedStartDate = JSON.stringify(receivedQueryStrings.startDate).replace(/"/g, '')
+    const receivedEndDate = JSON.stringify(receivedQueryStrings.endDate).replace(/"/g, '')
+    const receivedContainsHelpArticle = receivedQueryStrings.containsHelpArticle
+    const receivedContainsDevArticle = receivedQueryStrings.containsDevArticle
+
   // Validate dates
-  const receivedStartDate = JSON.stringify(receivedQueryStrings.startDate).replace(/"/g, '')
+
   if (!isValidDate(receivedStartDate)) {
-    returnErrorUrl(receivedArticleUrl, 500, `${receivedStartDate} is not a valid startDate value. Use the format yyyy-mm-dd.`, ctx)
+    returnErrorQuery({
+      startDate: receivedStartDate,
+      endDate: receivedEndDate,
+      containsHelpArticle: receivedContainsHelpArticle,
+      containsDevArticle: receivedContainsDevArticle,
+      articleUrl: receivedArticleUrl
+    }, 400, `'${receivedStartDate}' is not a valid startDate value. Use the format yyyy-mm-dd.`, ctx)
     return
   }
 
-  const receivedEndDate = JSON.stringify(receivedQueryStrings.endDate).replace(/"/g, '')
   if (!isValidDate(receivedEndDate)) {
-    returnErrorUrl(receivedArticleUrl, 500, `${receivedEndDate} is not a valid endDate value. Use the format yyyy-mm-dd.`, ctx)
+    returnErrorQuery({
+      startDate: receivedStartDate,
+      endDate: receivedEndDate,
+      containsHelpArticle: receivedContainsHelpArticle,
+      containsDevArticle: receivedContainsDevArticle,
+      articleUrl: receivedArticleUrl
+    }, 400, `'${receivedEndDate}' is not a valid endDate value. Use the format yyyy-mm-dd.`, ctx)
     return
   }
 
   // Validate boolean params
-  const receivedContainsHelpArticle = receivedQueryStrings.containsHelpArticle
   if (receivedContainsHelpArticle && !(receivedContainsHelpArticle == 'true' || receivedContainsHelpArticle == 'false')) {
-    returnErrorUrl(receivedArticleUrl, 500, `${receivedContainsHelpArticle} is not a valid containsHelpArticle value. Use true or false.`, ctx)
+    returnErrorQuery({
+      startDate: receivedStartDate,
+      endDate: receivedEndDate,
+      containsHelpArticle: receivedContainsHelpArticle,
+      containsDevArticle: receivedContainsDevArticle,
+      articleUrl: receivedArticleUrl
+    }, 400, `'${receivedContainsHelpArticle}' is not a valid containsHelpArticle value. Use true or false.`, ctx)
     return
   }
 
-
-  const receivedContainsDevArticle = receivedQueryStrings.containsDevArticle
   if (receivedContainsDevArticle && !(receivedContainsDevArticle == 'true' || receivedContainsDevArticle == 'false')) {
-    returnErrorUrl(receivedArticleUrl, 500, `${receivedContainsDevArticle} is not a valid containsDevArticle value. Use true or false.`, ctx)
+    returnErrorQuery({
+      startDate: receivedStartDate,
+      endDate: receivedEndDate,
+      containsHelpArticle: receivedContainsHelpArticle,
+      containsDevArticle: receivedContainsDevArticle,
+      articleUrl: receivedArticleUrl
+    }, 400, `'${receivedContainsDevArticle}' is not a valid containsDevArticle value. Use true or false.`, ctx)
     return
   }
 

@@ -1,5 +1,6 @@
 // Verifying that the request actually comes from Zendesk
 // https://developer.zendesk.com/documentation/webhooks/verifying/#verifying-the-signature
+
 import bodyParser from 'co-body'
 import * as crypto from 'crypto'
 import { returnErrorTicket } from './errorLogs'

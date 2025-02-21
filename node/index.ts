@@ -8,7 +8,7 @@ import { getCommentData } from './middlewares/getCommentData'
 import { processCommentData } from './middlewares/processCommentData'
 import { validateParams } from './middlewares/validateParams'
 
-const TIMEOUT_MS = 800
+const TIMEOUT_MS = 6000
 
 // Create a LRU memory cache for the Status client.
 // The 'max' parameter sets the size of the cache.
@@ -27,7 +27,7 @@ const clients: ClientsConfig<Clients> = {
   options: {
     // All IO Clients will be initialized with these options, unless otherwise specified.
     default: {
-      retries: 2,
+      retries: 4,
       timeout: TIMEOUT_MS,
     },
     // This key will be merged with the default options and add this cache to our Status client.
